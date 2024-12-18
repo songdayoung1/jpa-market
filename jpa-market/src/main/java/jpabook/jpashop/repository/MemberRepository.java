@@ -1,5 +1,6 @@
 package jpabook.jpashop.repository;
 
+import jakarta.persistence.PersistenceContext;
 import jpabook.jpashop.domain.Member;
 
 import org.springframework.stereotype.Repository;
@@ -14,11 +15,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberRepository {
 
-	
-    private final EntityManager em = null;
+    @PersistenceContext
+    private EntityManager em;
 
-    public void save(Member member) {
+    // private final EntityManager em = null;
+
+    public void memberSave(Member member) {
         em.persist(member);
+    }
+
+    public Long save(Member member) {
+        em.persist(member);
+        return member.getId();
     }
 
     public Member findOne(Long id) {
@@ -34,5 +42,9 @@ public class MemberRepository {
         return em.createQuery("select m from Member m where m.name = :name", Member.class)
                 .setParameter("name", name)
                 .getResultList();
+    }
+
+    public Member find(Long saveId) {
+        return em.find(Member.class, saveId);
     }
 }
